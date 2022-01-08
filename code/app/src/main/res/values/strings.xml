@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BitcoinChecker</string>
+    <string name="addNotification">Add a notification</string>
+    <string name="upTo">WHEN BITCOIN IS UP TO</string>
+    <string name="downTo">WHEN BITCOIN IS DOWN TO</string>
+    <string name="searchCrypto">Search a crypto here</string>
+    <string name="search">Search</string>
 </resources>
