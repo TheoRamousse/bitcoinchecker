@@ -1,4 +1,4 @@
-package fr.uca.bitcoinchecker.utils
+package fr.uca.bitcoinchecker.utils.api
 
 import java.lang.Exception
 import java.net.HttpURLConnection
