@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.R
 
-class NotificationRecyclerViewAdapter(private val context : Context, private val dataSet: List<NotificationItem>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
+class NotificationRecyclerViewAdapter(private val context : Context) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
 
     class NotificationViewHolder(view : View) : RecyclerView.ViewHolder(view) {
         val content : TextView
@@ -23,6 +23,8 @@ class NotificationRecyclerViewAdapter(private val context : Context, private val
             icon = view.findViewById(R.id.iconNotification)
         }
     }
+
+    private var dataSet: List<NotificationItem> = emptyList()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
@@ -45,4 +47,9 @@ class NotificationRecyclerViewAdapter(private val context : Context, private val
     }
 
     override fun getItemCount() = dataSet.size
+
+    fun updateList(listUpdated : List<NotificationItem>){
+        dataSet = listUpdated
+        notifyDataSetChanged()
+    }
 }

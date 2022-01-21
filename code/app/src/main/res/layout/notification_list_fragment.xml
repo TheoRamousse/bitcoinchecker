@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/listNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_baseline_add_alert_24"
+        android:layout_width="60dp"
+        android:id="@+id/floatingButton"
+        android:layout_height="60dp"
+        app:fabCustomSize="60dp"
+        android:layout_margin="20dp"
+        android:tint="@color/white"
+        android:layout_gravity="bottom | right"/>
+</FrameLayout>
