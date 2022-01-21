@@ -5,5 +5,7 @@ import androidx.room.PrimaryKey
 import fr.iut.bitcoinchecker.model.NotificationItem
 
 @Entity(tableName = "containers")
-data class ContainerNotificationItem(@PrimaryKey(autoGenerate = true) val id : Long, var name : String, var listOfNotifications : MutableList<NotificationItem>) {
+class ContainerNotificationItem(var name : String
+                                    ) {
+    @PrimaryKey(autoGenerate = true) var id : Long? = null
 }

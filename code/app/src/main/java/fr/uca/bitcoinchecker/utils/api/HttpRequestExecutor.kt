@@ -1,12 +1,13 @@
 package fr.uca.bitcoinchecker.utils.api
 
+import fr.uca.bitcoinchecker.utils.api.json_converter.JsonConverter
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
 class HttpRequestExecutor {
     companion object{
-        fun<T: Any, U: Any> executeUrlResolution(callback : Callback<T>, apiEndpoint : String, converter: JsonConverter<T,U>){
+        fun<T: Any, U: Any> executeUrlResolution(callback : Callback<T>, apiEndpoint : String, converter: JsonConverter<T, U>){
             val thread = Thread {
                 try {
                     val connection = URL(apiEndpoint).openConnection() as HttpURLConnection
