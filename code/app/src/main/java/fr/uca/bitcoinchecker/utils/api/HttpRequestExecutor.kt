@@ -1,6 +1,7 @@
 package fr.uca.bitcoinchecker.utils.api
 
 import fr.uca.bitcoinchecker.utils.api.json_converter.JsonConverter
+import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
@@ -8,7 +9,7 @@ import java.net.URL
 class HttpRequestExecutor {
     companion object{
         fun<T: Any, U: Any> executeUrlResolution(callback : Callback<T>, apiEndpoint : String, converter: JsonConverter<T, U>){
-            val thread = Thread {
+            var t = Thread{
                 try {
                     val connection = URL(apiEndpoint).openConnection() as HttpURLConnection
                     var receivedText : String
@@ -29,7 +30,7 @@ class HttpRequestExecutor {
                 }
             }
 
-            thread.start()
+            t.start()
 
         }
     }
