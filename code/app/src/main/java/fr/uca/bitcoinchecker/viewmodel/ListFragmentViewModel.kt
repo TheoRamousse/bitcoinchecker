@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class MainActivityViewModel(var name: String, private val dataInitializedListener: DataInitializedListener) : ViewModel() {
+class ListFragmentViewModel(var name: String, private val dataInitializedListener: DataInitializedListener) : ViewModel() {
     interface DataInitializedListener {
         fun onDataInitialized()
     }

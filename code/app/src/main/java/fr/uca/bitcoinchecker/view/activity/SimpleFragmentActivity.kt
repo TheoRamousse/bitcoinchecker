@@ -15,13 +15,34 @@ abstract class SimpleFragmentActivity : AppCompatActivity() {
         setContentView(getLayoutResId())
 
 
-        if (supportFragmentManager.findFragmentById(R.id.container_fragment) == null) {
-            supportFragmentManager.beginTransaction()
-                                  .add(R.id.container_fragment, createFragment())
-                                  .commit()
+        if (!isFragmentLateinitialized()){
+            startFragment()
         }
     }
 
+    protected fun startFragment() {
+        if(supportFragmentManager.findFragmentById(R.id.container_fragment) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.container_fragment, createFragment())
+                .commit()
+        }
+    }
+
+    protected fun startFragmentOrReplace() {
+        if(supportFragmentManager.findFragmentById(R.id.container_fragment) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.container_fragment, createFragment())
+                .commit()
+        }
+        else {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container_fragment, createFragment())
+                .commit()
+        }
+    }
+
+
+    protected abstract fun isFragmentLateinitialized(): Boolean
 
     protected abstract fun createFragment(): Fragment
 

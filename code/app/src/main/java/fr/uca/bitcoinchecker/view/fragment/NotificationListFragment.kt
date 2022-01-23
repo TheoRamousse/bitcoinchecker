@@ -7,20 +7,17 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.R
 import fr.uca.bitcoinchecker.view.adapter.NotificationRecyclerViewAdapter
-import fr.uca.bitcoinchecker.viewmodel.MainActivityViewModel
+import fr.uca.bitcoinchecker.viewmodel.ListFragmentViewModel
 import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
 import java.util.*
-import kotlin.math.log
 
-class NotificationListFragment : Fragment(), LifecycleOwner, MainActivityViewModel.DataInitializedListener {
+class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewModel.DataInitializedListener {
     companion object {
         private const val EXTRA_CONTAINER_NAME = "fr.uca.bitcoinchecker.extra_container_id"
 
@@ -30,7 +27,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, MainActivityViewMod
     }
 
     private lateinit var containerName: String
-    private lateinit var viewModel : MainActivityViewModel
+    private lateinit var viewModel : ListFragmentViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapterList: NotificationRecyclerViewAdapter
     private lateinit var floatingButton: FloatingActionButton
@@ -42,8 +39,15 @@ class NotificationListFragment : Fragment(), LifecycleOwner, MainActivityViewMod
         containerName = savedInstanceState?.getString(EXTRA_CONTAINER_NAME) ?: arguments?.getString(
             EXTRA_CONTAINER_NAME)!!
 
-        viewModel = ViewModelProvider(this, ViewModelFactory.createViewModel { MainActivityViewModel(containerName, this) }).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProvider(this, ViewModelFactory.createViewModel { ListFragmentViewModel(containerName, this) }).get(ListFragmentViewModel::class.java)
 
+        if(savedInstanceState?.getString(EXTRA_CONTAINER_NAME) != null)
+            onDataInitialized()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(EXTRA_CONTAINER_NAME, containerName)
     }
 
     override fun onCreateView(
