@@ -12,56 +12,74 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import android.provider.BaseColumns
 
 import android.database.MatrixCursor
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.CursorAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import fr.uca.bitcoinchecker.model.Endpoints
-import fr.uca.bitcoinchecker.model.Quote
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import fr.uca.bitcoinchecker.model.dto.QuoteSuggestion
-import fr.uca.bitcoinchecker.utils.api.HttpRequestExecutor
-import fr.uca.bitcoinchecker.utils.api.HttpRequestExecutor.Callback
-import fr.uca.bitcoinchecker.utils.api.json_converter.JsonToListOfQuoteSuggestionsConverter
-import fr.uca.bitcoinchecker.utils.api.json_converter.JsonToQuotesConverter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import fr.uca.bitcoinchecker.viewmodel.MainActivityViewModel
+import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
+import kotlinx.coroutines.*
 import java.net.URL
 import java.util.*
 
 
-class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener,
-    Callback {
-    private val DEFAULT_CRYPTO = "bitcoin"
-    private val RESPONSE_ALL_QUOTES = "fr.uca.bitcoinchecker.mainactivity.allquotes"
-    private val RESPONSE_CURRENT_QUOTE = "fr.uca.bitcoinchecker.mainactivity.currentquote"
+class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
+    private val mainScope = MainScope()
 
     private lateinit var suggestions: Array<QuoteSuggestion?>
     private lateinit var suggestionAdapter: SimpleCursorAdapter
     private var currentSuggestions = mutableListOf<String>()
-    private lateinit var currentQuote: Quote
+    private lateinit var viewModel: MainActivityViewModel
     private lateinit var imageCrypto: ImageView
     private lateinit var textCrypto: TextView
+    private lateinit var background: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         imageCrypto = findViewById(R.id.cryptoImage)
         textCrypto = findViewById(R.id.textCrypto)
-        runBlocking(Dispatchers.Default) {
-            HttpRequestExecutor.executeUrlResolution(
-                this@MainActivity,
-                Endpoints.API_ENDPOINT_CURRENT_QUOTE.prefix + DEFAULT_CRYPTO + Endpoints.API_ENDPOINT_CURRENT_QUOTE.suffix,
-                JsonToQuotesConverter.Companion,
-                RESPONSE_CURRENT_QUOTE
-            )
-            HttpRequestExecutor.executeUrlResolution(
-                this@MainActivity,
-                Endpoints.API_ENDPOINT_ALL_QUOTES.prefix,
-                JsonToListOfQuoteSuggestionsConverter.Companion,
-                RESPONSE_ALL_QUOTES
-            )
+        background = findViewById(R.id.background_money)
+        mainScope.launch {
+            Glide.with(this@MainActivity).load(R.drawable.gif_background).into(background)
         }
+        viewModel = ViewModelProvider(this@MainActivity, ViewModelFactory.createViewModel { MainActivityViewModel(this@MainActivity) }).get(
+            MainActivityViewModel::class.java)
+        viewModel.listOfSuggestions.observe(this@MainActivity, {
+            suggestions = arrayOfNulls(it.size)
+            for ((n, quote) in it.withIndex()) {
+                suggestions[n] = quote
+            }
+        })
+
+        viewModel.currentQuote.observe(this@MainActivity, {
+            runBlocking(Dispatchers.Default) {
+                var image: Bitmap?=null
+                val job = launch {
+                    image =
+                        BitmapFactory.decodeStream(
+                            URL(it.imageUrl).openConnection().getInputStream()
+                        )
+                }
+                this@MainActivity.runOnUiThread{
+                    textCrypto.text =
+                        String.format("1 %s = %f $", it.name, it.currentPrice)
+                    startFragmentOrReplace()
+                }
+                job.join()
+                this@MainActivity.runOnUiThread {
+                    imageCrypto.setImageBitmap(image)
+                }
+            }
+        })
         handleIntent(intent)
+
+        mainScope.launch {
+            viewModel.loadData()
+        }
     }
 
     override fun isFragmentLateinitialized()=true
@@ -105,7 +123,7 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener,
     }
 
 
-    override fun createFragment() = NotificationListFragment.newInstance(currentQuote.name ?: DEFAULT_CRYPTO)
+    override fun createFragment() = NotificationListFragment.newInstance(viewModel.currentQuote.value!!.name ?: viewModel.DEFAULT_CRYPTO)
 
     override fun getLayoutResId() = R.layout.activity_main
 
@@ -122,20 +140,16 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener,
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if(currentSuggestions.contains(query)) {
-            var id: String = DEFAULT_CRYPTO
+            var id: String = ""
             suggestions.forEach {
                 if (it!!.name == query) {
                     id = it.id
                 }
             }
             runBlocking(Dispatchers.Default) {
-                HttpRequestExecutor.executeUrlResolution(
-                    this@MainActivity,
-                    Endpoints.API_ENDPOINT_CURRENT_QUOTE.prefix + id + Endpoints.API_ENDPOINT_CURRENT_QUOTE.suffix,
-                    JsonToQuotesConverter.Companion,
-                    RESPONSE_CURRENT_QUOTE
-                )
-            }
+                launch {
+                    viewModel.setCurrentCryptoName(id)
+                }}
         }
         return false
     }
@@ -159,31 +173,6 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener,
             suggestionAdapter.changeCursor(c)
         }
         return false
-    }
-
-    override fun onDataReceived(item: Any, responseKey: String) {
-        if(responseKey == RESPONSE_ALL_QUOTES) {
-            with(item as List<QuoteSuggestion>)
-            {
-                suggestions = arrayOfNulls(item.size)
-                for ((i, quote) in item.withIndex()) {
-                    suggestions[i] = quote
-                }
-            }
-        }
-        else if(responseKey == RESPONSE_CURRENT_QUOTE){
-            with(item as Quote)
-            {
-                currentQuote = item
-                val image = BitmapFactory.decodeStream(URL(currentQuote.imageUrl).openConnection().getInputStream())
-                this@MainActivity.runOnUiThread(java.lang.Runnable {
-                    imageCrypto.setImageBitmap(image)
-                    textCrypto.text =
-                        String.format("1 %s = %f $", currentQuote.name, currentQuote.currentPrice)
-                })
-                startFragmentOrReplace()
-            }
-        }
     }
 
 

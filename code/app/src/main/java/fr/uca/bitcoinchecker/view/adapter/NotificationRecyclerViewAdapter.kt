@@ -1,6 +1,7 @@
 package fr.uca.bitcoinchecker.view.adapter
 
 import android.content.Context
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.R
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class NotificationRecyclerViewAdapter(private val context : Context) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
 
@@ -42,7 +48,7 @@ class NotificationRecyclerViewAdapter(private val context : Context) : RecyclerV
             viewHolder.content.text = String.format("%s %d$", context.getString(R.string.downTo)  ,dataSet[position].value)
             viewHolder.icon.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
         }
-        viewHolder.creationDate.text = dataSet[position].creationDate.toString()
+        viewHolder.creationDate.text = DateFormat.getDateFormat(context).format(dataSet[position].creationDate)
 
     }
 

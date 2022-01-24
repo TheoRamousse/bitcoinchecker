@@ -1,44 +1,40 @@
 package fr.uca.bitcoinchecker.utils.api
 
 import fr.uca.bitcoinchecker.utils.api.json_converter.JsonConverter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
 class HttpRequestExecutor {
     companion object{
-        suspend fun<T: Any, U: Any> executeUrlResolution(callback : Callback, apiEndpoint : String, converter: JsonConverter<T, U>, responseKey: String){
-            coroutineScope{
-                launch {
+        fun<T: Any, U: Any> executeUrlResolution(callback : Callback, apiEndpoint : String, converter: JsonConverter<T, U>, responseKey: String){
+            GlobalScope.launch {
+                try {
+                    val connection = URL(apiEndpoint).openConnection() as HttpURLConnection
+                    var receivedText: String
                     try {
-                        val connection = URL(apiEndpoint).openConnection() as HttpURLConnection
-                        var receivedText: String
-                        try {
-                            connection.connect()
-                            receivedText = connection.inputStream.use { inputStream ->
-                                inputStream.reader().use {
-                                    it.readText()
-                                }
+                        connection.connect()
+                        receivedText = connection.inputStream.use { inputStream ->
+                            inputStream.reader().use {
+                                it.readText()
                             }
-                        } finally {
-                            connection.disconnect()
                         }
-
-
-                                callback.onDataReceived(
-                                    converter.convertUniqueItem(receivedText),
-                                    responseKey
-                                )
-                            
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    } finally {
+                        connection.disconnect()
                     }
+
+
+                    callback.onDataReceived(
+                        converter.convertUniqueItem(receivedText),
+                        responseKey
+                    )
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
+
 
 
         }
