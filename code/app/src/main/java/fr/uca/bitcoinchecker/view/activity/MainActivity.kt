@@ -15,6 +15,7 @@ import android.database.MatrixCursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
+import android.media.RingtoneManager
 import android.provider.MediaStore
 import android.view.View
 import android.view.View.GONE
@@ -57,6 +58,8 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
                 suggestions[n] = quote
             }
         })
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.drift)
 
         viewModel.currentQuote.observe(this@MainActivity, {
             startFragmentOrReplace()
@@ -118,16 +121,16 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
         counterEasterEgg++
         if(counterEasterEgg == 15){
             counterEasterEgg = 0
+            mediaPlayer?.start()
             var t : Thread = Thread {
                     mainScope.launch {
-                        mediaPlayer = MediaPlayer.create(this@MainActivity, R.raw.lepers)
                         Glide.with(this@MainActivity).clear(binding.backgroundMoney)
                         Glide.with(this@MainActivity).load(R.drawable.easter_egg)
                             .into(binding.backgroundMoney)
                         binding.cryptoImage.visibility = GONE
                         binding.cryptoImage.visibility = GONE
                     }
-                    Thread.sleep(6000)
+                    Thread.sleep(4000)
                     mainScope.launch {
                         Glide.with(this@MainActivity).clear(binding.backgroundMoney)
                         Glide.with(this@MainActivity).load(R.drawable.gif_background).into(binding.backgroundMoney)
