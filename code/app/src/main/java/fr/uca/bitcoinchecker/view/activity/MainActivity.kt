@@ -14,11 +14,18 @@ import android.provider.BaseColumns
 import android.database.MatrixCursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
+import android.provider.MediaStore
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.CursorAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import fr.uca.bitcoinchecker.databinding.ActivityMainBinding
 import fr.uca.bitcoinchecker.model.dto.QuoteSuggestion
 import fr.uca.bitcoinchecker.viewmodel.MainActivityViewModel
 import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
@@ -28,26 +35,22 @@ import java.util.*
 
 
 class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
-    private val mainScope = MainScope()
+    val mainScope = MainScope()
 
     private lateinit var suggestions: Array<QuoteSuggestion?>
     private lateinit var suggestionAdapter: SimpleCursorAdapter
     private var currentSuggestions = mutableListOf<String>()
     private lateinit var viewModel: MainActivityViewModel
-    private lateinit var imageCrypto: ImageView
-    private lateinit var textCrypto: TextView
-    private lateinit var background: ImageView
+    private var counterEasterEgg = 0
+    private lateinit var binding: ActivityMainBinding
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageCrypto = findViewById(R.id.cryptoImage)
-        textCrypto = findViewById(R.id.textCrypto)
-        background = findViewById(R.id.background_money)
-        mainScope.launch {
-            Glide.with(this@MainActivity).load(R.drawable.gif_background).into(background)
-        }
+
         viewModel = ViewModelProvider(this@MainActivity, ViewModelFactory.createViewModel { MainActivityViewModel(this@MainActivity) }).get(
             MainActivityViewModel::class.java)
+
         viewModel.listOfSuggestions.observe(this@MainActivity, {
             suggestions = arrayOfNulls(it.size)
             for ((n, quote) in it.withIndex()) {
@@ -56,30 +59,31 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
         })
 
         viewModel.currentQuote.observe(this@MainActivity, {
-            runBlocking(Dispatchers.Default) {
-                var image: Bitmap?=null
-                val job = launch {
-                    image =
-                        BitmapFactory.decodeStream(
-                            URL(it.imageUrl).openConnection().getInputStream()
-                        )
-                }
-                this@MainActivity.runOnUiThread{
-                    textCrypto.text =
-                        String.format("1 %s = %f $", it.name, it.currentPrice)
-                    startFragmentOrReplace()
-                }
-                job.join()
-                this@MainActivity.runOnUiThread {
-                    imageCrypto.setImageBitmap(image)
-                }
-            }
+            startFragmentOrReplace()
         })
+
+
+
+        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,R.layout.activity_main)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        mainScope.launch {
+            Glide.with(this@MainActivity).load(R.drawable.gif_background).into(binding.backgroundMoney)
+        }
+
+
+
         handleIntent(intent)
 
         mainScope.launch {
             viewModel.loadData()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainScope.cancel()
     }
 
     override fun isFragmentLateinitialized()=true
@@ -108,6 +112,32 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
 
 
         return true
+    }
+
+    fun incrementCountEasterEgg(v: View){
+        counterEasterEgg++
+        if(counterEasterEgg == 15){
+            counterEasterEgg = 0
+            var t : Thread = Thread {
+                    mainScope.launch {
+                        mediaPlayer = MediaPlayer.create(this@MainActivity, R.raw.lepers)
+                        Glide.with(this@MainActivity).clear(binding.backgroundMoney)
+                        Glide.with(this@MainActivity).load(R.drawable.easter_egg)
+                            .into(binding.backgroundMoney)
+                        binding.cryptoImage.visibility = GONE
+                        binding.cryptoImage.visibility = GONE
+                    }
+                    Thread.sleep(6000)
+                    mainScope.launch {
+                        Glide.with(this@MainActivity).clear(binding.backgroundMoney)
+                        Glide.with(this@MainActivity).load(R.drawable.gif_background).into(binding.backgroundMoney)
+                        binding.cryptoImage.visibility = VISIBLE
+                        binding.cryptoImage.visibility = VISIBLE
+                    }
+            }
+
+            t.start()
+        }
     }
 
     private fun createSuggestionAdapter() {

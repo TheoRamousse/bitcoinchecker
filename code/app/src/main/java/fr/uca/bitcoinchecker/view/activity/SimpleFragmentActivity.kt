@@ -12,7 +12,7 @@ abstract class SimpleFragmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(getLayoutResId())
+        //setContentView(getLayoutResId())
 
 
         if (!isFragmentLateinitialized()){

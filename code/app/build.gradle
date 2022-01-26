@@ -8,6 +8,8 @@ apply plugin: 'kotlin-android'
 android {
     compileSdk 31
 
+    dataBinding {enabled true}
+
     defaultConfig {
         applicationId "fr.uca.bitcoinchecker"
         minSdk 21
