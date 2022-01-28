@@ -5,4 +5,8 @@
     <string name="downTo">WHEN BITCOIN IS DOWN TO</string>
     <string name="searchCrypto">Search a crypto here</string>
     <string name="search">Search</string>
+    <string name="cryptoName">Nom de la crypto :</string>
+    <string name="choice_up_down">Lorsque la quote est :</string>
+    <string name="value_in_dollar">Valeur en dollars :</string>
+    <string name="add_notification">Ajouter la notification</string>
 </resources>

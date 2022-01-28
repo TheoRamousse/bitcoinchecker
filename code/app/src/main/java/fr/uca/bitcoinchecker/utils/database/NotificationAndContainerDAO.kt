@@ -1,6 +1,7 @@
 package fr.uca.bitcoinchecker.utils.database
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 import fr.iut.bitcoinchecker.model.NotificationItem
@@ -39,5 +40,8 @@ interface NotificationAndContainerDAO {
 
     @Delete
     fun deleteNotification(notificationItem: NotificationItem)
+
+    @Query("SELECT * FROM notifications WHERE id=:id")
+    fun getNotificationById(id: Long) : MutableLiveData<NotificationItem>
 
 }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.R
+import fr.uca.bitcoinchecker.view.activity.ViewNotificationActivity
 import fr.uca.bitcoinchecker.view.adapter.NotificationRecyclerViewAdapter
 import fr.uca.bitcoinchecker.viewmodel.ListFragmentViewModel
 import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
@@ -69,8 +70,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         floatingButton.setOnClickListener {
-            viewModel.addNotification(NotificationItem( 42, NotificationItem.NotificationImportance.HIGH, NotificationItem.Variation.UP,
-                Date(),-1))
+            startActivity(ViewNotificationActivity.getIntent(this.context!!))
         }
     }
 
