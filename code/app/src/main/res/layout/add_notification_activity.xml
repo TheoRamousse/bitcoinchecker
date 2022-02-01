@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="viewModel" type="fr.uca.bitcoinchecker.viewmodel.AddNotificationActivityViewModel"/>
         <import type="fr.uca.bitcoinchecker.view.adapter.DataBindingAdapters"/>
@@ -36,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:importantForAutofill="no"
+                android:id="@+id/edit_crypto_name"
                 app:layout_constraintBaseline_toBaselineOf="@+id/text_crypto_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/barrier"
@@ -66,16 +65,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/spinner_choice_up_down"
                 android:text="@string/value_in_dollar"/>
             <EditText
+                android:hint="@string/value_receive_notif"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:layout_weight="1"
                 android:id="@+id/edit_value_dollar"
                 app:layout_constraintBaseline_toBaselineOf="@+id/text_value_dollar"
-                app:layout_constraintEnd_toStartOf="@id/text_value_dollar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/barrier" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <Button
+            android:onClick="addNotif"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

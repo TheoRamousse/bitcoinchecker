@@ -6,27 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.R
+import fr.uca.bitcoinchecker.view.activity.ViewNotificationActivity
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class NotificationRecyclerViewAdapter(private val context : Context) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
+class NotificationRecyclerViewAdapter(private val context : Context, private val containerName: String) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
 
     class NotificationViewHolder(view : View) : RecyclerView.ViewHolder(view) {
         val content : TextView
         val creationDate : TextView
         val icon : ImageView
+        val rowContainer: LinearLayout
 
         init{
             content = view.findViewById(R.id.contentNotification)
             creationDate = view.findViewById(R.id.creationDateNotification)
             icon = view.findViewById(R.id.iconNotification)
+            rowContainer = view.findViewById(R.id.row_container)
         }
     }
 
@@ -48,7 +52,11 @@ class NotificationRecyclerViewAdapter(private val context : Context) : RecyclerV
             viewHolder.content.text = String.format("%s %d$", context.getString(R.string.downTo)  ,dataSet[position].value)
             viewHolder.icon.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
         }
-        viewHolder.creationDate.text = DateFormat.getDateFormat(context).format(dataSet[position].creationDate)
+        viewHolder.creationDate.text = DateFormat.getDateFormat(context).format(dataSet[position].creationDate!!)
+
+        viewHolder.rowContainer.setOnClickListener {
+            context.startActivity(ViewNotificationActivity.getIntent(context, dataSet[position].id!!, containerName))
+        }
 
     }
 

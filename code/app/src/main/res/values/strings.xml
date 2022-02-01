@@ -9,4 +9,5 @@
     <string name="choice_up_down">Lorsque la quote est :</string>
     <string name="value_in_dollar">Valeur en dollars :</string>
     <string name="add_notification">Ajouter la notification</string>
+    <string name="value_receive_notif">Valeur de la crypto à laquelle vous souhaitez être averti</string>
 </resources>

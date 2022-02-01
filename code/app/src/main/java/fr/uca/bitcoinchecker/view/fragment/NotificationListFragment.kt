@@ -58,7 +58,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
     ): View? {
         val view = inflater.inflate(R.layout.notification_list_fragment, container, false)
         recyclerView = view.findViewById(R.id.listNotifications)
-        adapterList = NotificationRecyclerViewAdapter(view.context)
+        adapterList = NotificationRecyclerViewAdapter(view.context, containerName)
         recyclerView.adapter = adapterList
 
         floatingButton = view.findViewById(R.id.floatingButton)
@@ -70,7 +70,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         floatingButton.setOnClickListener {
-            startActivity(ViewNotificationActivity.getIntent(this.context!!))
+            startActivity(ViewNotificationActivity.getIntent(requireContext(), containerName))
         }
     }
 

@@ -42,6 +42,6 @@ interface NotificationAndContainerDAO {
     fun deleteNotification(notificationItem: NotificationItem)
 
     @Query("SELECT * FROM notifications WHERE id=:id")
-    fun getNotificationById(id: Long) : MutableLiveData<NotificationItem>
+    fun getNotificationById(id: Long) : LiveData<NotificationItem>
 
 }
