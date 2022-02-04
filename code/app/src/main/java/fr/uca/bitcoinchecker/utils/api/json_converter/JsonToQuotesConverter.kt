@@ -7,14 +7,14 @@ import fr.uca.bitcoinchecker.model.Quote
 
 class JsonToQuotesConverter{
     companion object  : JsonConverter<Quote, QuoteDTO> {
-        override fun convertUniqueItem(json : String) : Quote {
+        override suspend fun convertUniqueItem(json : String) : Quote {
             val mapper = jacksonObjectMapper()
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             var quoteDTO : QuoteDTO = mapper.readValue(json, QuoteDTO::class.java)
             return convertDTOToModel(quoteDTO)
         }
 
-        override fun convertDTOToModel(q: QuoteDTO) : Quote {
+        override suspend fun convertDTOToModel(q: QuoteDTO) : Quote {
             return Quote(q.id, q.name, q.symbol, q.image.large, q.market_data.current_price.usd)
         }
     }

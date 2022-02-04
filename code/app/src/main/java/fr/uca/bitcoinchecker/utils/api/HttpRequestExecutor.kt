@@ -8,8 +8,7 @@ import java.net.URL
 
 class HttpRequestExecutor {
     companion object{
-        fun<T: Any, U: Any> executeUrlResolution(callback : Callback, apiEndpoint : String, converter: JsonConverter<T, U>, responseKey: String){
-            GlobalScope.launch {
+         suspend fun<T: Any, U: Any> executeUrlResolution(callback : Callback, apiEndpoint : String, converter: JsonConverter<T, U>, responseKey: String) = withContext(Dispatchers.IO){
                 try {
                     val connection = URL(apiEndpoint).openConnection() as HttpURLConnection
                     var receivedText: String
@@ -33,7 +32,6 @@ class HttpRequestExecutor {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
 
 
 

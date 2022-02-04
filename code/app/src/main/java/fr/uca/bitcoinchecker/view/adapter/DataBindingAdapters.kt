@@ -2,9 +2,15 @@ package fr.uca.bitcoinchecker.view.adapter
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.Spinner
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingConversion
+import androidx.databinding.ObservableField
+import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.model.Quote
 import fr.uca.bitcoinchecker.view.activity.MainActivity
 import kotlinx.coroutines.Dispatchers
@@ -28,11 +34,10 @@ object DataBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("app:image")
-    fun urlToImage(view: ImageView,currentUrl: String?){
-        if(currentUrl != null)
-        {
+    fun urlToImage(view: ImageView,currentUrl: String?) {
+        if (currentUrl != null) {
             runBlocking(Dispatchers.Default) {
-                var image: Bitmap?=null
+                var image: Bitmap? = null
                 val job = launch {
                     image =
                         BitmapFactory.decodeStream(

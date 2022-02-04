@@ -16,11 +16,11 @@ import java.util.Date
                              )]
 )
 data class NotificationItem(
-    var value: Int,
-    var importance: NotificationImportance,
-    var variation: Variation,
-    var creationDate: Date?,
-    var containerId: Long
+    var value: Int = -42,
+    var importance: NotificationImportance = NotificationImportance.LOW,
+    var variation: Variation = Variation.DOWN,
+    var creationDate: Date? = Date(),
+    var containerId: Long = -42
 ) {
     @PrimaryKey(autoGenerate = true) var id: Long? = null
 
@@ -34,4 +34,5 @@ data class NotificationItem(
         UP,
         DOWN
     }
+
 }

@@ -71,6 +71,7 @@
                 android:inputType="number"
                 android:layout_weight="1"
                 android:id="@+id/edit_value_dollar"
+                android:text="@{viewModel.notification.value}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/text_value_dollar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/barrier" />
@@ -80,6 +81,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_notification"></Button>
+            android:text="@string/add_notification"/>
     </LinearLayout>
 </layout>

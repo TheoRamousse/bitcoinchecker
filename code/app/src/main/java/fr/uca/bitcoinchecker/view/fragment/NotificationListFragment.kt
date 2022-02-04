@@ -70,7 +70,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         floatingButton.setOnClickListener {
-            startActivity(ViewNotificationActivity.getIntent(requireContext(), containerName))
+            startActivity(ViewNotificationActivity.getIntent(requireContext(), -42L, containerName))
         }
     }
 
