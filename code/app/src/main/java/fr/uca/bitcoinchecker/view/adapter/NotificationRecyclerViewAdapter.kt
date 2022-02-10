@@ -1,27 +1,27 @@
 package fr.uca.bitcoinchecker.view.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.R
+import fr.uca.bitcoinchecker.model.NotificationItem
+import fr.uca.bitcoinchecker.view.activity.ViewNotificationActivity
 
-class NotificationRecyclerViewAdapter(private val context : Context) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
+class NotificationRecyclerViewAdapter(private val context : Context, private val containerName: String, private val cryptoIdInApi: String) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
 
     class NotificationViewHolder(view : View) : RecyclerView.ViewHolder(view) {
-        val content : TextView
-        val creationDate : TextView
-        val icon : ImageView
+        val content : TextView = view.findViewById(R.id.contentNotification)
+        val creationDate : TextView = view.findViewById(R.id.creationDateNotification)
+        val icon : ImageView = view.findViewById(R.id.iconNotification)
+        val rowContainer: LinearLayout = view.findViewById(R.id.row_container)
 
-        init{
-            content = view.findViewById(R.id.contentNotification)
-            creationDate = view.findViewById(R.id.creationDateNotification)
-            icon = view.findViewById(R.id.iconNotification)
-        }
     }
 
     private var dataSet: List<NotificationItem> = emptyList()
@@ -42,12 +42,27 @@ class NotificationRecyclerViewAdapter(private val context : Context) : RecyclerV
             viewHolder.content.text = String.format("%s %d$", context.getString(R.string.downTo)  ,dataSet[position].value)
             viewHolder.icon.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
         }
-        viewHolder.creationDate.text = dataSet[position].creationDate.toString()
+        viewHolder.creationDate.text = DateFormat.getDateFormat(context).format(dataSet[position].creationDate!!)
+
+        when(dataSet[position].importance){
+            NotificationItem.NotificationImportance.LOW ->
+                viewHolder.rowContainer.setBackgroundColor(context.resources.getColor(R.color.low))
+            NotificationItem.NotificationImportance.MEDIUM ->
+                viewHolder.rowContainer.setBackgroundColor(context.resources.getColor(R.color.medium))
+            NotificationItem.NotificationImportance.HIGH ->
+                viewHolder.rowContainer.setBackgroundColor(context.resources.getColor(R.color.high))
+
+        }
+
+        viewHolder.rowContainer.setOnClickListener {
+            context.startActivity(ViewNotificationActivity.getIntent(context, dataSet[position].id!!, cryptoIdInApi, containerName))
+        }
 
     }
 
     override fun getItemCount() = dataSet.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(listUpdated : List<NotificationItem>){
         dataSet = listUpdated
         notifyDataSetChanged()

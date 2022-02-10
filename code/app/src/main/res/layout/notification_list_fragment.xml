@@ -17,5 +17,6 @@
         app:fabCustomSize="60dp"
         android:layout_margin="20dp"
         android:tint="@color/white"
-        android:layout_gravity="bottom | right"/>
+        android:layout_gravity="bottom | right"
+        android:contentDescription="@string/button_used_to_go_in_the_view_dedicated_to_add_notifs" />
 </FrameLayout>

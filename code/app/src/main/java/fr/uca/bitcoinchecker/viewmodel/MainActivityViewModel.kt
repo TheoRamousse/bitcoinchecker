@@ -1,76 +1,61 @@
 package fr.uca.bitcoinchecker.viewmodel
 
-import androidx.lifecycle.*
-import fr.iut.bitcoinchecker.model.NotificationItem
-import fr.uca.bitcoinchecker.model.ContainerNotificationItem
-import fr.uca.bitcoinchecker.utils.database.NotificationAndContainerDatabase
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import fr.uca.bitcoinchecker.model.Endpoints
+import fr.uca.bitcoinchecker.model.Quote
+import fr.uca.bitcoinchecker.model.dto.QuoteSuggestion
+import fr.uca.bitcoinchecker.utils.api.HttpRequestExecutor
+import fr.uca.bitcoinchecker.utils.api.json_converter.JsonToListOfQuoteSuggestionsConverter
+import fr.uca.bitcoinchecker.utils.api.json_converter.JsonToQuotesConverter
+import fr.uca.bitcoinchecker.view.activity.MainActivity
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+class MainActivityViewModel(private val mainActivity: MainActivity): ViewModel(), HttpRequestExecutor.Callback {
+    val DEFAULT_CRYPTO = "bitcoin"
+    private val RESPONSE_ALL_QUOTES = "fr.uca.bitcoinchecker.mainactivity.allquotes"
+    private val RESPONSE_CURRENT_QUOTE = "fr.uca.bitcoinchecker.mainactivity.currentquote"
 
-class MainActivityViewModel(var name: String, private val dataInitializedListener: DataInitializedListener) : ViewModel() {
-    interface DataInitializedListener {
-        fun onDataInitialized()
+    val listOfSuggestions = MutableLiveData<List<QuoteSuggestion>>()
+    val currentQuote = MutableLiveData<Quote>()
+
+    fun loadData(){
+        setCurrentCryptoName(DEFAULT_CRYPTO)
+        viewModelScope.launch {
+            HttpRequestExecutor.executeUrlResolution(
+                this@MainActivityViewModel,
+                Endpoints.API_ENDPOINT_ALL_QUOTES.prefix,
+                JsonToListOfQuoteSuggestionsConverter.Companion,
+                RESPONSE_ALL_QUOTES
+            )
+        }
     }
 
-    private lateinit var observerAddNotif: Observer<Long>
-    private lateinit var observer: Observer<Long>
-    private var databaseAccessor: NotificationAndContainerDatabase =
-        NotificationAndContainerDatabase.getInstance()
-    private var containerId = getContainerIdByName(name)
-    lateinit var dataNotification: LiveData<List<NotificationItem>>
-
-    init {
-        observer = Observer<Long>(){
-            if(it != null){
-                dataNotification = Transformations.switchMap(containerId){
-                    databaseAccessor.notificationAndContainerDAO().getNotificationsByContainerId(it)
-                }
-                dataInitializedListener.onDataInitialized()
-                containerId.removeObserver(observer)
+    override suspend fun onDataReceived(item: Any, responseKey: String) {
+        if(responseKey == RESPONSE_ALL_QUOTES) {
+            mainActivity.runOnUiThread {
+                listOfSuggestions.value = item as List<QuoteSuggestion>
             }
         }
-
-        containerId.observeForever(observer)
-
-    }
-
-    fun addNotification(newValue: NotificationItem) {
-        observerAddNotif = Observer<Long>(){
-            it?.let {
-                viewModelScope.launch(Dispatchers.IO) {
-                    newValue.containerId = it
-                    databaseAccessor.notificationAndContainerDAO().insertNotification(newValue)
-                    withContext(Dispatchers.Main) {
-                        containerId.removeObserver(observerAddNotif)
-                    }
+        else if(responseKey == RESPONSE_CURRENT_QUOTE){
+            with(item as Quote)
+            {
+                mainActivity.runOnUiThread {
+                    currentQuote.value = item
                 }
             }
         }
-        containerId.observeForever(observerAddNotif)
+    }
 
-        if (containerId.value == null) {
-            containerId.observeForever(observer)
-            viewModelScope.launch(Dispatchers.IO) {
-                databaseAccessor.notificationAndContainerDAO()
-                    .insertContainer(ContainerNotificationItem(name = name))
-            }
+    fun setCurrentCryptoName(id: String) {
+        viewModelScope.launch {
+            HttpRequestExecutor.executeUrlResolution(
+                this@MainActivityViewModel,
+                Endpoints.API_ENDPOINT_CURRENT_QUOTE.prefix + id + Endpoints.API_ENDPOINT_CURRENT_QUOTE.suffix,
+                JsonToQuotesConverter.Companion,
+                RESPONSE_CURRENT_QUOTE
+            )
         }
     }
-
-    fun removeNotification(valueToDelete: NotificationItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            databaseAccessor.notificationAndContainerDAO().deleteNotification(valueToDelete)
-        }
-    }
-
-    fun findNotificationsByContainerId(id: Long): LiveData<List<NotificationItem>> {
-        return databaseAccessor.notificationAndContainerDAO().getNotificationsByContainerId(id)
-    }
-
-
-
-    private fun getContainerIdByName(name: String) =
-        databaseAccessor.notificationAndContainerDAO().getContainerIdByName(name)
 }

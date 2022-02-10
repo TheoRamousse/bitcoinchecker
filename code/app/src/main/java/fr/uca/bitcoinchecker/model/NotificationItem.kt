@@ -1,4 +1,4 @@
-package fr.iut.bitcoinchecker.model
+package fr.uca.bitcoinchecker.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -16,11 +16,12 @@ import java.util.Date
                              )]
 )
 data class NotificationItem(
-    var value: Int,
-    var importance: NotificationImportance,
-    var variation: Variation,
-    var creationDate: Date?,
-    var containerId: Long
+    var value: Long = 0,
+    var isTreated: Boolean = false,
+    var importance: NotificationImportance = NotificationImportance.LOW,
+    var variation: Variation = Variation.DOWN,
+    var creationDate: Date? = Date(),
+    var containerId: Long = -42
 ) {
     @PrimaryKey(autoGenerate = true) var id: Long? = null
 
@@ -34,4 +35,5 @@ data class NotificationItem(
         UP,
         DOWN
     }
+
 }

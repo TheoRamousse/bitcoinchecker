@@ -5,8 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.model.ContainerNotificationItem
+import fr.uca.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.utils.database.converter.DateTimestampConverter
 import fr.uca.bitcoinchecker.utils.database.converter.ImportanceIntConverter
 import fr.uca.bitcoinchecker.utils.database.converter.VariationIntConverter

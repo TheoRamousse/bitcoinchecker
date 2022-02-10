@@ -1,8 +1,29 @@
 <resources>
     <string name="app_name">BitcoinChecker</string>
     <string name="addNotification">Add a notification</string>
-    <string name="upTo">WHEN BITCOIN IS UP TO</string>
-    <string name="downTo">WHEN BITCOIN IS DOWN TO</string>
-    <string name="searchCrypto">Search a crypto here</string>
-    <string name="search">Search</string>
+    <string name="upTo">quand la crypto est supérieur à</string>
+    <string name="downTo">quand la crypto est inférieur à</string>
+    <string name="searchCrypto">Rechercher une crypto</string>
+    <string name="search">Rechercher</string>
+    <string name="cryptoName">Nom de la crypto :</string>
+    <string name="choice_up_down">Lorsque la quote est :</string>
+    <string name="value_in_dollar">Valeur en dollars :</string>
+    <string name="add_notification">Ajouter la notification</string>
+    <string name="value_receive_notif">Valeur de déclenchement</string>
+    <string name="down">Inferieur à</string>
+    <string name="up">Superieur à</string>
+    <string name="choice_importance">Importance de la notif :</string>
+    <string name="low">Faible</string>
+    <string name="medium">Moyenne</string>
+    <string name="high">Importante</string>
+    <string name="updateNotification">Mettre à jour</string>
+    <string name="picture_of_crypto">Picture of crypto</string>
+    <string name="main_activity_background">Main Activity Background</string>
+    <string name="button_used_to_go_in_the_view_dedicated_to_add_notifs">Button used to go in the view dedicated to add notifs</string>
+    <string name="image_showing_if_the_notification_is_sended_when_the_crypto_is_up_or_down_to_the_value">Image showing if the notification is sended when the crypto is up or down to the value</string>
+    <string name="the">Le</string>
+    <string name="is_past">" est passé "</string>
+    <string name="above">"au dessus de "</string>
+    <string name="under">"en dessous de "</string>
+    <string name="warning">BitcoinChecker vous averti qu\'une de vos notifications a été activée :</string>
 </resources>
