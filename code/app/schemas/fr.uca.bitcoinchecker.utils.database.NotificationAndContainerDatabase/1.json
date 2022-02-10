@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a87f2fef554d9f31d6616e8b0ae7c988",
+    "identityHash": "392acfeb4ab004416deccda7f379ea8c",
     "entities": [
       {
         "tableName": "containers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `idCrypto` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -15,10 +15,16 @@
             "notNull": true
           },
           {
+            "fieldPath": "idCrypto",
+            "columnName": "idCrypto",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -32,11 +38,17 @@
       },
       {
         "tableName": "notifications",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`value` INTEGER NOT NULL, `importance` INTEGER NOT NULL, `variation` TEXT NOT NULL, `creationDate` INTEGER, `containerId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY(`containerId`) REFERENCES `containers`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`value` INTEGER NOT NULL, `isTreated` INTEGER NOT NULL, `importance` INTEGER NOT NULL, `variation` TEXT NOT NULL, `creationDate` INTEGER, `containerId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY(`containerId`) REFERENCES `containers`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "value",
             "columnName": "value",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTreated",
+            "columnName": "isTreated",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -96,7 +108,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a87f2fef554d9f31d6616e8b0ae7c988')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '392acfeb4ab004416deccda7f379ea8c')"
     ]
   }
 }

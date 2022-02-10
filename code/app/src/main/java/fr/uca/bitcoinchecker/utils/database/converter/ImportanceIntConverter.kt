@@ -1,7 +1,7 @@
 package fr.uca.bitcoinchecker.utils.database.converter
 
 import androidx.room.TypeConverter
-import fr.iut.bitcoinchecker.model.NotificationItem
+import fr.uca.bitcoinchecker.model.NotificationItem
 
 fun Int.toImportance() = enumValues<NotificationItem.NotificationImportance>()[this]
 

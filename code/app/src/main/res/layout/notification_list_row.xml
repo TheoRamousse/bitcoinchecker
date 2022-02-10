@@ -9,7 +9,8 @@
         android:id="@+id/iconNotification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:contentDescription="@string/image_showing_if_the_notification_is_sended_when_the_crypto_is_up_or_down_to_the_value" />
     <TextView
         android:id="@+id/contentNotification"
         android:layout_width="0dp"

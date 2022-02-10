@@ -1,4 +1,4 @@
-package fr.iut.bitcoinchecker.model
+package fr.uca.bitcoinchecker.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -16,7 +16,8 @@ import java.util.Date
                              )]
 )
 data class NotificationItem(
-    var value: Int = -42,
+    var value: Long = 0,
+    var isTreated: Boolean = false,
     var importance: NotificationImportance = NotificationImportance.LOW,
     var variation: Variation = Variation.DOWN,
     var creationDate: Date? = Date(),

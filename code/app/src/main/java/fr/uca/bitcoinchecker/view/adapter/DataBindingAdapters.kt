@@ -2,16 +2,14 @@ package fr.uca.bitcoinchecker.view.adapter
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ImageView
-import android.widget.Spinner
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingConversion
-import androidx.databinding.ObservableField
-import fr.iut.bitcoinchecker.model.NotificationItem
+import androidx.databinding.InverseMethod
+import fr.uca.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.model.Quote
+import fr.uca.bitcoinchecker.utils.database.converter.toImportance
+import fr.uca.bitcoinchecker.utils.database.converter.toVariation
 import fr.uca.bitcoinchecker.view.activity.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +29,40 @@ object DataBindingAdapters {
             return ""
         }
     }
+
+    @JvmStatic
+    @InverseMethod("stringToLong")
+    fun longToString(value: Long): String{
+        if(value != 0L)
+        {
+            return String.format("%d", value)
+        }
+        else{
+            return ""
+        }
+    }
+
+    @JvmStatic
+    fun stringToLong(value: String): Long {
+        return if (value.isBlank()) 0L else value.toLong()
+    }
+
+
+    @JvmStatic
+    @InverseMethod("intToVariation")
+    fun variationToInt(value: NotificationItem.Variation?) = value?.ordinal ?: 0
+
+    @JvmStatic
+    fun intToVariation(value: Int) = value.toVariation()
+
+
+    @JvmStatic
+    @InverseMethod("intToImportance")
+    fun importanceToInt(value: NotificationItem.NotificationImportance?) = value?.ordinal ?: 0
+
+    @JvmStatic
+    fun intToImportance(value: Int) = value.toImportance()
+
 
     @JvmStatic
     @BindingAdapter("app:image")

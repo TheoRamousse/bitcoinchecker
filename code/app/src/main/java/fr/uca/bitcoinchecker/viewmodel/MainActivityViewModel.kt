@@ -32,7 +32,7 @@ class MainActivityViewModel(private val mainActivity: MainActivity): ViewModel()
         }
     }
 
-    override fun onDataReceived(item: Any, responseKey: String) {
+    override suspend fun onDataReceived(item: Any, responseKey: String) {
         if(responseKey == RESPONSE_ALL_QUOTES) {
             mainActivity.runOnUiThread {
                 listOfSuggestions.value = item as List<QuoteSuggestion>

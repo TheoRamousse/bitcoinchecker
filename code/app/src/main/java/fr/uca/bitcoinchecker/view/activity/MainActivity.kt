@@ -12,26 +12,14 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import android.provider.BaseColumns
 
 import android.database.MatrixCursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.MediaPlayer
-import android.media.RingtoneManager
-import android.provider.MediaStore
-import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.CursorAdapter
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
 import fr.uca.bitcoinchecker.databinding.ActivityMainBinding
 import fr.uca.bitcoinchecker.model.dto.QuoteSuggestion
 import fr.uca.bitcoinchecker.viewmodel.MainActivityViewModel
 import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
 import kotlinx.coroutines.*
-import java.net.URL
 import java.util.*
 
 
@@ -42,9 +30,7 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
     private lateinit var suggestionAdapter: SimpleCursorAdapter
     private var currentSuggestions = mutableListOf<String>()
     private lateinit var viewModel: MainActivityViewModel
-    private var counterEasterEgg = 0
     private lateinit var binding: ActivityMainBinding
-    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,28 +38,22 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
         viewModel = ViewModelProvider(this@MainActivity, ViewModelFactory.createViewModel { MainActivityViewModel(this@MainActivity) }).get(
             MainActivityViewModel::class.java)
 
-        viewModel.listOfSuggestions.observe(this@MainActivity, {
+        viewModel.listOfSuggestions.observe(this@MainActivity) {
             suggestions = arrayOfNulls(it.size)
             for ((n, quote) in it.withIndex()) {
                 suggestions[n] = quote
             }
-        })
+        }
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.drift)
-
-        viewModel.currentQuote.observe(this@MainActivity, {
+        viewModel.currentQuote.observe(this@MainActivity) {
             startFragmentOrReplace()
-        })
+        }
 
 
 
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,R.layout.activity_main)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-
-        mainScope.launch {
-            Glide.with(this@MainActivity).load(R.drawable.gif_background).into(binding.backgroundMoney)
-        }
 
 
 
@@ -117,32 +97,6 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
         return true
     }
 
-    fun incrementCountEasterEgg(v: View){
-        counterEasterEgg++
-        if(counterEasterEgg == 15){
-            counterEasterEgg = 0
-            mediaPlayer?.start()
-            var t : Thread = Thread {
-                    mainScope.launch {
-                        Glide.with(this@MainActivity).clear(binding.backgroundMoney)
-                        Glide.with(this@MainActivity).load(R.drawable.easter_egg)
-                            .into(binding.backgroundMoney)
-                        binding.cryptoImage.visibility = GONE
-                        binding.cryptoImage.visibility = GONE
-                    }
-                    Thread.sleep(4000)
-                    mainScope.launch {
-                        Glide.with(this@MainActivity).clear(binding.backgroundMoney)
-                        Glide.with(this@MainActivity).load(R.drawable.gif_background).into(binding.backgroundMoney)
-                        binding.cryptoImage.visibility = VISIBLE
-                        binding.cryptoImage.visibility = VISIBLE
-                    }
-            }
-
-            t.start()
-        }
-    }
-
     private fun createSuggestionAdapter() {
         val from = arrayOf("text")
         val to = intArrayOf(android.R.id.text1)
@@ -156,7 +110,7 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
     }
 
 
-    override fun createFragment() = NotificationListFragment.newInstance(viewModel.currentQuote.value!!.name ?: viewModel.DEFAULT_CRYPTO)
+    override fun createFragment() = NotificationListFragment.newInstance(viewModel.currentQuote.value!!.name ?: viewModel.DEFAULT_CRYPTO, viewModel.currentQuote.value!!.id)
 
     override fun getLayoutResId() = R.layout.activity_main
 

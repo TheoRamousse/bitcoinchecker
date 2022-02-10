@@ -1,15 +1,15 @@
 package fr.uca.bitcoinchecker.viewmodel
 
 import androidx.lifecycle.*
-import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.model.ContainerNotificationItem
+import fr.uca.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.utils.database.NotificationAndContainerDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ListFragmentViewModel(var name: String, private val dataInitializedListener: DataInitializedListener) : ViewModel() {
+class ListFragmentViewModel(var name: String, var idCrypto: String, private val dataInitializedListener: DataInitializedListener) : ViewModel() {
     interface DataInitializedListener {
         fun onDataInitialized()
     }
@@ -54,7 +54,7 @@ class ListFragmentViewModel(var name: String, private val dataInitializedListene
             containerId.observeForever(observer)
             viewModelScope.launch(Dispatchers.IO) {
                 databaseAccessor.notificationAndContainerDAO()
-                    .insertContainer(ContainerNotificationItem(name = name))
+                    .insertContainer(ContainerNotificationItem(name = name, idCrypto))
             }
         }
     }

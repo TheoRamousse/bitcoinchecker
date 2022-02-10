@@ -10,24 +10,24 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.R
 import fr.uca.bitcoinchecker.view.activity.ViewNotificationActivity
 import fr.uca.bitcoinchecker.view.adapter.NotificationRecyclerViewAdapter
 import fr.uca.bitcoinchecker.viewmodel.ListFragmentViewModel
 import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
-import java.util.*
 
 class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewModel.DataInitializedListener {
     companion object {
         private const val EXTRA_CONTAINER_NAME = "fr.uca.bitcoinchecker.extra_container_id"
+        private const val EXTRA_ID_CRYPTO = "fr.uca.bitcoinchecker.extra_id_crypto"
 
-        fun newInstance(containerName: String) = NotificationListFragment().apply {
-            arguments = bundleOf(EXTRA_CONTAINER_NAME to containerName)
+        fun newInstance(containerName: String, idCrypto: String) = NotificationListFragment().apply {
+            arguments = bundleOf(EXTRA_CONTAINER_NAME to containerName, EXTRA_ID_CRYPTO to idCrypto)
         }
     }
 
     private lateinit var containerName: String
+    private lateinit var idCrypto: String
     private lateinit var viewModel : ListFragmentViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapterList: NotificationRecyclerViewAdapter
@@ -40,7 +40,10 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
         containerName = savedInstanceState?.getString(EXTRA_CONTAINER_NAME) ?: arguments?.getString(
             EXTRA_CONTAINER_NAME)!!
 
-        viewModel = ViewModelProvider(this, ViewModelFactory.createViewModel { ListFragmentViewModel(containerName, this) }).get(ListFragmentViewModel::class.java)
+        idCrypto = savedInstanceState?.getString(EXTRA_ID_CRYPTO) ?: arguments?.getString(
+            EXTRA_ID_CRYPTO)!!
+
+        viewModel = ViewModelProvider(this, ViewModelFactory.createViewModel { ListFragmentViewModel(containerName, idCrypto, this) }).get(ListFragmentViewModel::class.java)
 
         if(savedInstanceState?.getString(EXTRA_CONTAINER_NAME) != null)
             onDataInitialized()
@@ -58,7 +61,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
     ): View? {
         val view = inflater.inflate(R.layout.notification_list_fragment, container, false)
         recyclerView = view.findViewById(R.id.listNotifications)
-        adapterList = NotificationRecyclerViewAdapter(view.context, containerName)
+        adapterList = NotificationRecyclerViewAdapter(view.context, containerName, idCrypto)
         recyclerView.adapter = adapterList
 
         floatingButton = view.findViewById(R.id.floatingButton)
@@ -70,7 +73,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         floatingButton.setOnClickListener {
-            startActivity(ViewNotificationActivity.getIntent(requireContext(), -42L, containerName))
+            startActivity(ViewNotificationActivity.getIntent(requireContext(), -42L, idCrypto,containerName))
         }
     }
 

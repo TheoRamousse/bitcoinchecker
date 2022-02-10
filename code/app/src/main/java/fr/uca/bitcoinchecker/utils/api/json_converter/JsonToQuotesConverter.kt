@@ -10,7 +10,7 @@ class JsonToQuotesConverter{
         override suspend fun convertUniqueItem(json : String) : Quote {
             val mapper = jacksonObjectMapper()
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            var quoteDTO : QuoteDTO = mapper.readValue(json, QuoteDTO::class.java)
+            val quoteDTO : QuoteDTO = mapper.readValue(json, QuoteDTO::class.java)
             return convertDTOToModel(quoteDTO)
         }
 

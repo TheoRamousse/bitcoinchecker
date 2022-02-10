@@ -4,8 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
 
     <application
         android:name=".BitcoinCheckerApplication"
@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BitcoinChecker">
         <activity
+            android:screenOrientation="portrait"
             android:name=".view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -27,9 +28,15 @@
 
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".view.activity.ViewNotificationActivity"
             android:parentActivityName=".view.activity.MainActivity">
         </activity>
+
+
+        <service
+            android:name=".utils.service.NotificationSender"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
 
 </application>

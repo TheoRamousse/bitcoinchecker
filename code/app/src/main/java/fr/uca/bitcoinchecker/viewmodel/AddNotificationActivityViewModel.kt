@@ -1,20 +1,21 @@
 package fr.uca.bitcoinchecker.viewmodel
 
 import androidx.lifecycle.*
-import fr.iut.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.model.ContainerNotificationItem
+import fr.uca.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.utils.database.NotificationAndContainerDatabase
 import fr.uca.bitcoinchecker.view.activity.ViewNotificationActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Date
 
-class AddNotificationActivityViewModel(var id: Long, var containerName: String): ViewModel() {
+class AddNotificationActivityViewModel(var notificationIdInBase: Long, var notificationIdInApi : String ,var containerName: String): ViewModel() {
     private lateinit var observerAddNotif: Observer<Long>
-    private var databaseAccessor: NotificationAndContainerDatabase =
+    private val databaseAccessor: NotificationAndContainerDatabase =
         NotificationAndContainerDatabase.getInstance()
-    val notification = if(id == ViewNotificationActivity.NEW_NOTIFICATION_ID)  MutableLiveData(NotificationItem()) else databaseAccessor.notificationAndContainerDAO().getNotificationById(id)
+    val notification = if(notificationIdInBase == ViewNotificationActivity.NEW_NOTIFICATION_ID)  MutableLiveData(
+        NotificationItem()
+    ) else databaseAccessor.notificationAndContainerDAO().getNotificationById(notificationIdInBase)
     private var containerIdLiveData = databaseAccessor.notificationAndContainerDAO().getContainerIdByName(containerName)
 
 
@@ -25,11 +26,11 @@ class AddNotificationActivityViewModel(var id: Long, var containerName: String):
             observerAddNotif = Observer<Long>(){
                 it?.let {
                     viewModelScope.launch(Dispatchers.IO) {
-                        notification.value?.containerId = it
-                        databaseAccessor.notificationAndContainerDAO().insertNotification(notificationItem = notification.value!!)
                         withContext(Dispatchers.Main) {
                             containerIdLiveData.removeObserver(observerAddNotif)
                         }
+                        notification.value?.containerId = it
+                        databaseAccessor.notificationAndContainerDAO().insertNotification(notificationItem = notification.value!!)
                     }
                 }
             }
@@ -37,7 +38,7 @@ class AddNotificationActivityViewModel(var id: Long, var containerName: String):
 
             viewModelScope.launch(Dispatchers.IO) {
                 databaseAccessor.notificationAndContainerDAO()
-                    .insertContainer(ContainerNotificationItem(name = containerName))
+                    .insertContainer(ContainerNotificationItem(name = containerName, notificationIdInApi))
             }
         }
         else{

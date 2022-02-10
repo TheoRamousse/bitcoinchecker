@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="array_variation_options">
+    <item>@string/up</item>
+    <item>@string/down</item>
+</string-array>
+    <string-array name="array_importance_options">
+        <item>@string/low</item>
+        <item>@string/medium</item>
+        <item>@string/high</item>
+    </string-array>
+</resources>

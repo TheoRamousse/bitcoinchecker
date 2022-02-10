@@ -11,4 +11,9 @@
     <color name="green">#1F8A15</color>
     <color name="gray">#838383</color>
     <color name="ic_launcher_background">#C90035</color>
+
+
+    <color name="low">#C2FFB1</color>
+    <color name="medium">#F0FFB1</color>
+    <color name="high">#FFD1B1</color>
 </resources>
