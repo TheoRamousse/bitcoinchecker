@@ -33,6 +33,17 @@ Pour contacter cette API, il suffit de renseigner l'URL car les paramètres de l
 
 ## Rendu final
 
+![Alt text](Images/Capture d’écran_2022-02-11_13-06-34.png "Ajout d'une notification")
+<br/>
+![Alt text](Images/Capture d’écran_2022-02-11_11-20-54.png "Apparition du formulaire")
+<br/>
+![Alt text](Images/Capture d’écran_2022-02-11_11-20-27.png "Recherche d'une crypto")
+<br/>
+![Alt text](Images/Capture d’écran_2022-02-11_13-05-53.png "Apparition des suggestions")
+<br/>
+![Alt text](Images/Capture d’écran_2022-02-11_13-07-58.png "Affichage d'une nouvelle crypto")
+<br/>
+![Alt text](Images/Capture d’écran_2022-02-11_13-07-26.png "Affichage de la notification")
 
 
 
