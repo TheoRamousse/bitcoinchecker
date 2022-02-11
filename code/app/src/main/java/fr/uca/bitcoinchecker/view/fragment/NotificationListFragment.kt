@@ -16,12 +16,12 @@ import fr.uca.bitcoinchecker.view.adapter.NotificationRecyclerViewAdapter
 import fr.uca.bitcoinchecker.viewmodel.ListFragmentViewModel
 import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
 
-class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewModel.DataInitializedListener {
+class NotificationListFragment(private val mainActivity: NotificationRecyclerViewAdapter.Callback) : Fragment(), LifecycleOwner, ListFragmentViewModel.DataInitializedListener {
     companion object {
         private const val EXTRA_CONTAINER_NAME = "fr.uca.bitcoinchecker.extra_container_id"
         private const val EXTRA_ID_CRYPTO = "fr.uca.bitcoinchecker.extra_id_crypto"
 
-        fun newInstance(containerName: String, idCrypto: String) = NotificationListFragment().apply {
+        fun newInstance(containerName: String, idCrypto: String, mainActivity: NotificationRecyclerViewAdapter.Callback) = NotificationListFragment(mainActivity).apply {
             arguments = bundleOf(EXTRA_CONTAINER_NAME to containerName, EXTRA_ID_CRYPTO to idCrypto)
         }
     }
@@ -61,7 +61,7 @@ class NotificationListFragment : Fragment(), LifecycleOwner, ListFragmentViewMod
     ): View? {
         val view = inflater.inflate(R.layout.notification_list_fragment, container, false)
         recyclerView = view.findViewById(R.id.listNotifications)
-        adapterList = NotificationRecyclerViewAdapter(view.context, containerName, idCrypto)
+        adapterList = NotificationRecyclerViewAdapter(view.context, containerName, idCrypto, mainActivity)
         recyclerView.adapter = adapterList
 
         floatingButton = view.findViewById(R.id.floatingButton)

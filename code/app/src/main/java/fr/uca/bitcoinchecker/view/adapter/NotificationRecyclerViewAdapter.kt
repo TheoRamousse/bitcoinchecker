@@ -6,6 +6,7 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,13 +15,14 @@ import fr.uca.bitcoinchecker.R
 import fr.uca.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.view.activity.ViewNotificationActivity
 
-class NotificationRecyclerViewAdapter(private val context : Context, private val containerName: String, private val cryptoIdInApi: String) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
+class NotificationRecyclerViewAdapter(private val context : Context, private val containerName: String, private val cryptoIdInApi: String, private val mainActivity: Callback) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder>() {
 
     class NotificationViewHolder(view : View) : RecyclerView.ViewHolder(view) {
         val content : TextView = view.findViewById(R.id.contentNotification)
         val creationDate : TextView = view.findViewById(R.id.creationDateNotification)
         val icon : ImageView = view.findViewById(R.id.iconNotification)
         val rowContainer: LinearLayout = view.findViewById(R.id.row_container)
+        val buttonDelete: TextView = view.findViewById(R.id.button_delete)
 
     }
 
@@ -58,6 +60,10 @@ class NotificationRecyclerViewAdapter(private val context : Context, private val
             context.startActivity(ViewNotificationActivity.getIntent(context, dataSet[position].id!!, cryptoIdInApi, containerName))
         }
 
+        viewHolder.buttonDelete.setOnClickListener {
+            mainActivity.receiveRemove(dataSet[position])
+        }
+
     }
 
     override fun getItemCount() = dataSet.size
@@ -66,5 +72,10 @@ class NotificationRecyclerViewAdapter(private val context : Context, private val
     fun updateList(listUpdated : List<NotificationItem>){
         dataSet = listUpdated
         notifyDataSetChanged()
+    }
+
+
+    public interface Callback {
+        fun receiveRemove(notification: NotificationItem)
     }
 }

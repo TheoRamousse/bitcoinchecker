@@ -22,7 +22,7 @@ class NotificationSender() : JobService(), HttpRequestExecutor.Callback, Corouti
     companion object {
         val JOB_ID = 34844
         val NOTIFICATION_CHANNEL_ID = "424344"
-        val PERIODICITY_IN_SEC = 25
+        val PERIODICITY_IN_SEC = 3
     }
     private val RESPONSE_CURRENT_QUOTE = "fr.uca.bitcoinchecker.utils.service.notificationsender"
     private val databaseAccessor: NotificationAndContainerDatabase =

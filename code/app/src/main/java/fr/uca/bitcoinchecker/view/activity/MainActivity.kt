@@ -16,14 +16,16 @@ import android.widget.CursorAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import fr.uca.bitcoinchecker.databinding.ActivityMainBinding
+import fr.uca.bitcoinchecker.model.NotificationItem
 import fr.uca.bitcoinchecker.model.dto.QuoteSuggestion
+import fr.uca.bitcoinchecker.view.adapter.NotificationRecyclerViewAdapter
 import fr.uca.bitcoinchecker.viewmodel.MainActivityViewModel
 import fr.uca.bitcoinchecker.viewmodel.factory.ViewModelFactory
 import kotlinx.coroutines.*
 import java.util.*
 
 
-class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
+class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener, NotificationRecyclerViewAdapter.Callback{
     val mainScope = MainScope()
 
     private lateinit var suggestions: Array<QuoteSuggestion?>
@@ -110,7 +112,7 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
     }
 
 
-    override fun createFragment() = NotificationListFragment.newInstance(viewModel.currentQuote.value!!.name ?: viewModel.DEFAULT_CRYPTO, viewModel.currentQuote.value!!.id)
+    override fun createFragment() = NotificationListFragment.newInstance(viewModel.currentQuote.value!!.name ?: viewModel.DEFAULT_CRYPTO, viewModel.currentQuote.value!!.id, this)
 
     override fun getLayoutResId() = R.layout.activity_main
 
@@ -160,6 +162,10 @@ class MainActivity : SimpleFragmentActivity(), SearchView.OnQueryTextListener{
             suggestionAdapter.changeCursor(c)
         }
         return false
+    }
+
+    override fun receiveRemove(notification: NotificationItem) {
+        viewModel.removeNotification(notification)
     }
 
 
