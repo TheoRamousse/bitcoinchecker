@@ -12,6 +12,8 @@ L'utilisateur doit également pouvoir programmer des alertes qui seront lancée 
 
 ## Sketchs préliminaires
 
+![Alt text](Images/Schema.png "Sketch")
+
 ## Bibliothèque utilisées
 
 - com.fasterxml.jackson.module:jackson-module-kotlin:2.8.+
