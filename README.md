@@ -12,7 +12,7 @@ L'utilisateur doit également pouvoir programmer des alertes qui seront lancée 
 
 ## Sketchs préliminaires
 
-![Alt text](Images/Schema.png "Sketch")
+![Alt text](Images/Schema.PNG "Sketch")
 
 ## Bibliothèque utilisées
 
