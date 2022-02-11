@@ -12,7 +12,19 @@ L'utilisateur doit également pouvoir programmer des alertes qui seront lancée 
 
 ## Sketchs préliminaires
 
-## Conception préliminaire
+![Alt text](Images/Schema.png "Sketch")
+
+## Bibliothèque utilisées
+
+- com.fasterxml.jackson.module:jackson-module-kotlin:2.8.+
+- androidx.core:core-ktx:1.7.0
+- androidx.appcompat:appcompat:1.4.0
+- androidx.fragment:fragment-ktx:1.4.0
+- com.google.android.material:material:1.4.0
+- androidx.constraintlayout:constraintlayout:2.1.2
+- androidx.recyclerview:recyclerview:1.2.1
+- androidx.cardview:cardview:1.0.0
+
 
 ## Utilisation de l'API
 
@@ -33,15 +45,31 @@ Pour contacter cette API, il suffit de renseigner l'URL car les paramètres de l
 
 ## Rendu final
 
+Clique sur le bouton en bas à droite de l'activité principale pour ajouter une notification :
+<br/> 
 ![Alt text](Images/Capture d’écran_2022-02-11_13-06-34.png "Ajout d'une notification")
+<br/>
+<br/>
+Renseigner les différents paramètres de la notification à ajotuer :
 <br/>
 ![Alt text](Images/Capture d’écran_2022-02-11_11-20-54.png "Apparition du formulaire")
 <br/>
+<br/>
+Appuyer sur la loupe dans la barre de navigation pour rechercher une crypto :
+<br/>
 ![Alt text](Images/Capture d’écran_2022-02-11_11-20-27.png "Recherche d'une crypto")
+<br/>
+<br/>
+Lorsque plus de deux lettres sont renseignées, les suggestions de cryptos apparaissent : 
 <br/>
 ![Alt text](Images/Capture d’écran_2022-02-11_13-05-53.png "Apparition des suggestions")
 <br/>
+<br/>
+Lorsque le nom de la crypto est validé, l'activité principale passe sur la nouvelle crypto avec les potentielles notifications associées : 
+<br/>
 ![Alt text](Images/Capture d’écran_2022-02-11_13-07-58.png "Affichage d'une nouvelle crypto")
+<br/><br/>
+Envoie d'une notification lorsque la condition est validée : 
 <br/>
 ![Alt text](Images/Capture d’écran_2022-02-11_13-07-26.png "Affichage de la notification")
 
